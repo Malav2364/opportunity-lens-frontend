@@ -3,6 +3,7 @@ import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { dbConnect } from "@/lib/mongo";
 import { User } from "@/model/user-model";
+import { getLeaderboardData } from "@/app/actions";
 
 export default async function DashboardPage() {
   const session = await auth()
@@ -11,6 +12,7 @@ export default async function DashboardPage() {
 
   await dbConnect();
   const user = await User.findOne({ email: session.user.email }).lean();
+  const leaderboardData = await getLeaderboardData();
 
   const availableQuizzes = user.quizzes.filter(q => !q.completedAt);
   const recentQuizzes = user.quizzes.filter(q => q.completedAt).sort((a, b) => b.completedAt - a.completedAt);
@@ -26,6 +28,7 @@ export default async function DashboardPage() {
         recentQuizzes={JSON.parse(JSON.stringify(recentQuizzes))}
         achievements={JSON.parse(JSON.stringify(achievements))}
         totalQuizzes={totalQuizzes}
+        leaderboardData={leaderboardData}
       />
     </div>
   );

@@ -4,6 +4,7 @@ import { signIn, signOut } from "@/auth"
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { User } from "@/model/user-model";
 import { auth } from "@/auth";
+import { dbConnect } from "@/lib/mongo";
 
 export async function toggleModuleCompletion(moduleTitle, completed) {
     "use server";
@@ -222,5 +223,69 @@ export async function getLearningSuggestions(skills) {
             return { error: "Could not connect to the AI service. Please check your network connection and firewall settings." };
         }
         return { error: "An unexpected error occurred while fetching suggestions. Please try again later." };
+    }
+}
+
+export async function getLeaderboardData() {
+    try {
+        await dbConnect();
+        
+        const leaderboard = await User.aggregate([
+            {
+                $project: {
+                    Username: 1,
+                    averageScore: { $avg: "$quizzes.score" }
+                }
+            },
+            { $match: { averageScore: { $gt: 0 } } },
+            { $sort: { averageScore: -1 } },
+            { $limit: 10 }
+        ]);
+
+        return leaderboard.map(user => ({
+            name: user.Username,
+            averageScore: Math.round(user.averageScore)
+        }));
+
+    } catch (error) {
+        console.error("Error fetching leaderboard:", error);
+        return [];
+    }
+}
+
+export async function getGitHubOpportunities(skill) {
+    try {
+        // Sanitize skill to avoid injection or weird queries
+        const safeSkill = encodeURIComponent(skill);
+        // Search for issues with label "good first issue" or "good-first-issue"
+        const response = await fetch(`https://api.github.com/search/issues?q=label:"good-first-issue","good first issue"+language:${safeSkill}+state:open&sort=updated&per_page=5`, {
+            headers: {
+                'Accept': 'application/vnd.github.v3+json',
+                'User-Agent': 'Opportunity-Lens-App'
+            },
+            next: { revalidate: 3600 } // Cache for 1 hour
+        });
+
+        if (!response.ok) {
+            // If rate limited or other error, return empty array gracefully
+            console.warn(`GitHub API returned ${response.status}`);
+            return [];
+        }
+
+        const data = await response.json();
+        
+        if (!data.items) return [];
+
+        return data.items.map(issue => ({
+            id: issue.id,
+            title: issue.title,
+            url: issue.html_url,
+            repo: issue.repository_url.replace('https://api.github.com/repos/', ''),
+            comments: issue.comments,
+            created_at: issue.created_at
+        }));
+    } catch (error) {
+        console.error("Error fetching GitHub issues:", error);
+        return [];
     }
 }

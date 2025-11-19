@@ -14,8 +14,10 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Bar, BarChart as RechartsBarChart, CartesianGrid, XAxis, YAxis, Cell, LineChart, Line, AreaChart, Area } from "recharts"
 import { AIAssistant } from "./ai-assistant";
+import { Leaderboard } from "./leaderboard";
+import { OpportunityScout } from "./opportunity-scout";
 
-export function Dashboard({ user, session, availableQuizzes, recentQuizzes, achievements, totalQuizzes }) {
+export function Dashboard({ user, session, availableQuizzes, recentQuizzes, achievements, totalQuizzes, leaderboardData }) {
     const userImage = session?.user?.image && session.user.image.trim() !== "" ? session.user.image : "/Avatar21.svg";
     const userName = user?.Username || session?.user?.name;
 
@@ -151,6 +153,8 @@ export function Dashboard({ user, session, availableQuizzes, recentQuizzes, achi
                         </Tabs>
 
                         <AIAssistant quizzes={recentQuizzes} user={user} />
+                        
+                        <OpportunityScout recentQuizzes={recentQuizzes} />
 
                         <Card>
                             <CardHeader>
@@ -246,6 +250,8 @@ export function Dashboard({ user, session, availableQuizzes, recentQuizzes, achi
                                 <AchievementList achievements={achievements} />
                             </CardContent>
                         </Card>
+
+                        <Leaderboard data={leaderboardData} />
                     </div>
                 </main>
             </div>
