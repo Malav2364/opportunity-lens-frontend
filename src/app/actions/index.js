@@ -42,10 +42,16 @@ export async function generatePersonalizedCourse(topics) {
         return { error: "User not authenticated." };
     }
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    if (!process.env.GEMINI_API_KEY) {
+        console.error("GEMINI_API_KEY is not set");
+        return { error: "AI service is not configured properly." };
+    }
 
-    const jsonFormat = `
+    try {
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+        const jsonFormat = `
     [
         {
             "title": "Module 1: Topic Name",
@@ -63,8 +69,8 @@ export async function generatePersonalizedCourse(topics) {
     ]
     `;
 
-    const prompt = `
-    You are a fast proffesional web scraper at perplexity ai.
+        const prompt = `
+    You are a fast professional web scraper at perplexity ai.
     your Tasks: 
     1. Based on the following topics: ${topics.join(", ")}. 
     2. Generate a structured learning path for a beginner.
@@ -75,7 +81,6 @@ export async function generatePersonalizedCourse(topics) {
     7. In the end reorganize the modules and chapters based on one user should learn like a person selecting topics c++,python,c is incorrect path as you need to learn C first then c++ and then python so maintain such a sequence for modules and subchapters. 
     `;
 
-    try {
         const result = await model.generateContent(prompt);
         const response = await result.response;
         const text = response.text();
@@ -149,7 +154,7 @@ export async function getLearningSuggestions(skills) {
 
     try {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
         const prompt = `
             You are an expert course recommender. Your goal is to provide high-quality, relevant online courses for a user looking to improve their technical skills.
