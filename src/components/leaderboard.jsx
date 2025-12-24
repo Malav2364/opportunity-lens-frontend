@@ -5,10 +5,6 @@ export function Leaderboard({ data }) {
   return (
     <Card className="w-full">
       <CardHeader className="pb-2">
-        <div className="flex items-center gap-2">
-          <Trophy className="w-5 h-5 text-yellow-500" />
-          <CardTitle className="text-lg">Leaderboard</CardTitle>
-        </div>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">

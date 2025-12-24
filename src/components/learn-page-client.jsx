@@ -6,6 +6,7 @@ import { dbConnect } from "@/lib/mongo";
 import React, { useState, useMemo } from 'react'
 import { Timeline } from "@/components/ui/timeline";
 import { AvatarWithDropdown } from "@/components/ui/avatar-with-dropdown";
+import { Header } from "./header";
 import Link from "next/link";
 import BlurIn from "@/components/animTxt";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
@@ -96,35 +97,7 @@ export function LearnPageClient({ initialModules, userImage }) {
     return (
         <div className="min-h-screen bg-background">
             <div className="max-w-[1600px] mx-auto px-2 sm:px-4 py-2">
-                <header className="mb-4 md:mb-8">
-                    <nav>
-                        <div className="flex justify-between p-2 sm:p-4 items-center h-16 rounded-xl bg-card shadow-sm border border-border/40">
-                            <div className="flex gap-2 items-center">
-                                <Link href="/dashboard" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                                    <img src="/logo.svg" alt="logo" className="h-8 hover:scale-105 transition-transform" />
-                                    <BlurIn className="text-base md:text-lg font-medium">Opportunity Lens</BlurIn>
-                                </Link>
-                            </div>
-                            <div className="flex gap-2 sm:gap-4 md:gap-6 items-center">
-                                <Link
-                                    href="/test"
-                                    className="flex items-center gap-2 px-3 py-2 sm:px-4 rounded-lg border border-border/40 hover:bg-accent transition-colors"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M8 2v4" />
-                                        <path d="M16 2v4" />
-                                        <path d="M3 10h18" />
-                                        <path d="M9 16l2 2 4-4" />
-                                        <rect x="3" y="4" width="18" height="18" rx="2" />
-                                    </svg>
-                                    <span className="hidden md:inline">Assessment</span>
-                                </Link>
-                                <ThemeToggle />
-                                <AvatarWithDropdown userImage={userImage} />
-                            </div>
-                        </div>
-                    </nav>
-                </header>
+                <Header userImage={userImage} />
                 <main className="flex-1">
                     <Card>
                         <CardHeader>

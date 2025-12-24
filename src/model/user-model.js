@@ -47,6 +47,14 @@ const userSchema = new Schema({
         type: [achievementSchema],
         default: []
     },
+    goals: {
+        type: [{
+            title: { type: String, required: true },
+            completed: { type: Boolean, default: false },
+            createdAt: { type: Date, default: Date.now }
+        }],
+        default: []
+    },
     learningPath: {
         type: Array,
         default: [],

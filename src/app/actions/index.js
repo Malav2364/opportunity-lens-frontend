@@ -289,3 +289,71 @@ export async function getGitHubOpportunities(skill) {
         return [];
     }
 }
+
+export async function addGoal(title) {
+    const session = await auth();
+    if (!session?.user?.email) return { error: "Not authenticated" };
+
+    try {
+        await dbConnect();
+        const user = await User.findOne({ email: session.user.email });
+        if (!user) return { error: "User not found" };
+
+        user.goals.push({ title, completed: false });
+        await user.save();
+        
+        // Return plain object representation of the new goal
+        const newGoal = user.goals[user.goals.length - 1];
+        return { 
+            success: true, 
+            goal: {
+                _id: newGoal._id.toString(),
+                title: newGoal.title,
+                completed: newGoal.completed,
+                createdAt: newGoal.createdAt
+            }
+        };
+    } catch (error) {
+        console.error("Error adding goal:", error);
+        return { error: "Failed to add goal" };
+    }
+}
+
+export async function toggleGoal(goalId) {
+    const session = await auth();
+    if (!session?.user?.email) return { error: "Not authenticated" };
+
+    try {
+        await dbConnect();
+        const user = await User.findOne({ email: session.user.email });
+        if (!user) return { error: "User not found" };
+
+        const goal = user.goals.id(goalId);
+        if (goal) {
+            goal.completed = !goal.completed;
+            await user.save();
+            return { success: true };
+        }
+        return { error: "Goal not found" };
+    } catch (error) {
+        console.error("Error toggling goal:", error);
+        return { error: "Failed to toggle goal" };
+    }
+}
+
+export async function deleteGoal(goalId) {
+    const session = await auth();
+    if (!session?.user?.email) return { error: "Not authenticated" };
+
+    try {
+        await dbConnect();
+        await User.updateOne(
+            { email: session.user.email },
+            { $pull: { goals: { _id: goalId } } }
+        );
+        return { success: true };
+    } catch (error) {
+        console.error("Error deleting goal:", error);
+        return { error: "Failed to delete goal" };
+    }
+}
