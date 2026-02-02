@@ -179,7 +179,6 @@ export function Dashboard({ user, session, availableQuizzes, recentQuizzes, achi
                                 <div className="flex items-center gap-2">
                                     <div className="w-1 h-6 bg-amber-500 rounded-full"></div>
                                     <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">Opportunity Scout</h2>
-                                    <Badge variant="secondary" className="bg-green-100 text-green-700 text-[10px] font-bold uppercase tracking-wider">Live Feed</Badge>
                                 </div>
                                 <Link href="#" className="text-sm font-medium text-blue-600 hover:text-blue-700 flex items-center">
                                     View All <ArrowRight className="w-3 h-3 ml-1" />
