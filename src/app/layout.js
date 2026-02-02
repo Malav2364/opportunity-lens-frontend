@@ -4,6 +4,7 @@ import { dbConnect } from "@/lib/mongo";
 import { Toaster } from "@/components/ui/sonner";
 import './globals.css';
 import { Icon, icons } from "lucide-react";
+import { MobileNav } from "@/components/mobile-nav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +35,7 @@ export default async function RootLayout({ children }) {
       >
         <ThemeProvider>
           {children}
+          <MobileNav />
           <Toaster />
         </ThemeProvider>
       </body>

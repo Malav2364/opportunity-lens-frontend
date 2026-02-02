@@ -195,7 +195,7 @@ export default function LandingPage() {
                       </div>
                     </Card>
                     <Card className="p-6 shadow-sm">
-                      <p className="text-sm font-medium text-muted-foreground mb-2">ACTIVE CHALLANGES</p>
+                      <p className="text-sm font-medium text-muted-foreground mb-2">ACTIVE CHALLENGES</p>
                       <div className="text-3xl font-bold">66</div>
                       <div className="flex items-center text-green-600 text-sm mt-1 font-medium">
                         <TrendingUp className="w-4 h-4 mr-1" /> +5.2%
@@ -286,7 +286,7 @@ export default function LandingPage() {
             <div className="text-center max-w-3xl mx-auto mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Learning skills is easy.<br />
-                <span className="text-blue-600">Knowing what to learn next isn't.</span>
+                <span className="text-blue-600">Knowing what to learn next isn&apos;t.</span>
               </h2>
               <p className="text-lg text-muted-foreground">
                 Most learners are stuck between tutorials, confusion, and zero real-world direction.
@@ -299,9 +299,9 @@ export default function LandingPage() {
                 <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-6 text-blue-600">
                   <BarChart3 className="w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold mb-3">You don't know your real skill level</h3>
+                <h3 className="text-xl font-bold mb-3">You don&apos;t know your real skill level</h3>
                 <p className="text-muted-foreground mb-8">
-                  Courses don't tell you what you're actually good or bad at. You finish a video, but can you build the thing?
+                  Courses don&apos;t tell you what you&apos;re actually good or bad at. You finish a video, but can you build the thing?
                 </p>
                 <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border space-y-3">
                   <div className="space-y-1">
@@ -336,7 +336,7 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-xl font-bold mb-3">Learning paths are generic</h3>
                 <p className="text-muted-foreground mb-8">
-                  Everyone gets the same roadmap, regardless of strengths or gaps. It's one-size-fits-none.
+                  Everyone gets the same roadmap, regardless of strengths or gaps. It&apos;s one-size-fits-none.
                 </p>
                 <div className="flex justify-center gap-4 py-4">
                   {[1, 2, 3].map((i) => (
@@ -357,7 +357,7 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-xl font-bold mb-3">Open source feels intimidating</h3>
                 <p className="text-muted-foreground mb-8">
-                  You want to contribute, but don't know where to start or what issues match your skills.
+                  You want to contribute, but don&apos;t know where to start or what issues match your skills.
                 </p>
                 <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border space-y-3">
                   <div className="flex gap-1.5 mb-2">
@@ -419,7 +419,7 @@ export default function LandingPage() {
         <section className="py-24 bg-slate-50 dark:bg-slate-900/20">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Don't just take our word for it</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Don&apos;t just take our word for it</h2>
               <p className="text-lg text-muted-foreground">
                 See how Opportunity Lens is helping analysts, students, and teams achieve their data goals.
               </p>
@@ -438,7 +438,7 @@ export default function LandingPage() {
                         <Star key={star} className="w-4 h-4 fill-blue-500 text-blue-500" />
                       ))}
                     </div>
-                    <p className="text-muted-foreground mb-8 leading-relaxed">"{item.quote}"</p>
+                    <p className="text-muted-foreground mb-8 leading-relaxed">&quot;{item.quote}&quot;</p>
                     <div className="flex items-center gap-4 mt-auto">
                       <Avatar className="h-10 w-10">
                         <AvatarFallback className={item.color}>{item.initials}</AvatarFallback>
