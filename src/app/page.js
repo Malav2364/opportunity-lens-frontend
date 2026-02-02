@@ -189,7 +189,7 @@ export default function LandingPage() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <Card className="p-6 shadow-sm">
                       <p className="text-sm font-medium text-muted-foreground mb-2">AVERAGE SCORE</p>
-                      <div className="text-3xl font-bold">$124,500</div>
+                      <div className="text-3xl font-bold">65%</div>
                       <div className="flex items-center text-green-600 text-sm mt-1 font-medium">
                         <TrendingUp className="w-4 h-4 mr-1" /> +12.5%
                       </div>
@@ -286,7 +286,7 @@ export default function LandingPage() {
             <div className="text-center max-w-3xl mx-auto mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Learning skills is easy.<br />
-                <span className="text-blue-600">Knowing what to learn next isn\\\'t.</span>
+                <span className="text-blue-600">Knowing what to learn next isn't.</span>
               </h2>
               <p className="text-lg text-muted-foreground">
                 Most learners are stuck between tutorials, confusion, and zero real-world direction.
