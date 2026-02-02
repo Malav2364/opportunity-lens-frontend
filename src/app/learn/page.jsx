@@ -1,79 +1,52 @@
 import { auth } from "@/auth"
 import { dbConnect } from "@/lib/mongo";
 import React from 'react'
-import { Timeline } from "@/components/ui/timeline";
-import { AvatarWithDropdown } from "@/components/ui/avatar-with-dropdown";
+import { SkillTree } from "@/components/skill-tree";
 import { Header } from "@/components/header";
-import Link from "next/link";
-import BlurIn from "@/components/animTxt";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { cn } from "@/lib/utils";
+import { User } from "@/model/user-model";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { redirect } from "next/navigation";
+
+export const dynamic = 'force-dynamic';
 
 export default async function page() {
     const session = await auth()
-    
-    if(!session?.user) redirect("/unauthorized")
+
+    if (!session?.user) redirect("/unauthorized")
 
     await dbConnect();
-    const { User } = await import("@/model/user-model");
     const user = await User.findOne({ email: session.user.email }).lean();
     const userImage = session?.user?.image && session.user.image.trim() !== "" ? session.user.image : "/Avatar21.svg";
 
-    const modules = user?.learningPath && user.learningPath.length > 0 ? user.learningPath : [];
+    // Ensure we have a valid array
+    const modules = user?.learningPath && Array.isArray(user.learningPath) ? user.learningPath : [];
 
-    const data = modules.map((module, moduleIndex) => ({
-        title: module.title,
-        content: (
-            <Card>
-                <CardContent className="flex flex-col gap-4 pt-6">
-                    {module.chapters && module.chapters.length > 0 && (
-                        <Accordion type="single" collapsible className="w-full">
-                            {module.chapters.map((chapter, chapterIndex) => (
-                                <AccordionItem value={`item-${moduleIndex}-${chapterIndex}`} key={chapterIndex}>
-                                    <AccordionTrigger>{chapter.title}</AccordionTrigger>
-                                    <AccordionContent>
-                                        <div className="flex flex-col gap-2 pl-4">
-                                            {chapter.subTopics.map((subTopic, subTopicIndex) => (
-                                                <Link
-                                                    href={subTopic.demoLink || "#"}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    key={subTopicIndex}
-                                                    className={cn(buttonVariants({ variant: "link", className: "justify-start" }))}
-                                                >
-                                                    {subTopic.title}
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    </AccordionContent>
-                                </AccordionItem>
-                            ))}
-                        </Accordion>
+    return (
+        <div className="min-h-screen bg-slate-50 dark:bg-background">
+            <div className="max-w-[1600px] mx-auto px-2 sm:px-4 py-2">
+                <Header userImage={userImage} />
+                <main className="flex-1 py-8">
+                    <div className="text-center mb-12 space-y-4">
+                        <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 pb-2 leading-tight">
+                            Your Learning Adventure
+                        </h1>
+                        <p className="text-slate-600 dark:text-slate-300 max-w-2xl mx-auto text-lg">
+                            Master each skill node to progress. Unlock new chapters and earn badges as you grow your expertise.
+                        </p>
+                    </div>
+
+                    {modules.length > 0 ? (
+                        <SkillTree modules={JSON.parse(JSON.stringify(modules))} />
+                    ) : (
+                        <Card className="max-w-md mx-auto text-center p-8">
+                            <CardHeader>
+                                <CardTitle>No Learning Path Yet</CardTitle>
+                                <CardDescription>Take a quiz or request a personalized path to start your journey!</CardDescription>
+                            </CardHeader>
+                        </Card>
                     )}
-                </CardContent>
-            </Card>
-        )
-    }));
-
-  return (
-    <div className="min-h-screen bg-background">
-        <div className="max-w-[1600px] mx-auto px-2 sm:px-4 py-2">
-            <Header userImage={userImage} />
-            <main className="flex-1">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Your Learning Path</CardTitle>
-                        <CardDescription>Complete the modules to unlock new quizzes and achievements.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <Timeline data={data} />
-                    </CardContent>
-                </Card>
-            </main>
+                </main>
+            </div>
         </div>
-    </div>
-  )
+    )
 }
