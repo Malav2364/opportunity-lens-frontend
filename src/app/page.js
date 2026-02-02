@@ -188,22 +188,22 @@ export default function LandingPage() {
                   {/* Stats Row */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <Card className="p-6 shadow-sm">
-                      <p className="text-sm font-medium text-muted-foreground mb-2">Total Revenue</p>
+                      <p className="text-sm font-medium text-muted-foreground mb-2">AVERAGE SCORE</p>
                       <div className="text-3xl font-bold">$124,500</div>
                       <div className="flex items-center text-green-600 text-sm mt-1 font-medium">
                         <TrendingUp className="w-4 h-4 mr-1" /> +12.5%
                       </div>
                     </Card>
                     <Card className="p-6 shadow-sm">
-                      <p className="text-sm font-medium text-muted-foreground mb-2">Active Opportunities</p>
-                      <div className="text-3xl font-bold">482</div>
+                      <p className="text-sm font-medium text-muted-foreground mb-2">ACTIVE CHALLANGES</p>
+                      <div className="text-3xl font-bold">66</div>
                       <div className="flex items-center text-green-600 text-sm mt-1 font-medium">
                         <TrendingUp className="w-4 h-4 mr-1" /> +5.2%
                       </div>
                     </Card>
                     <Card className="p-6 shadow-sm">
-                      <p className="text-sm font-medium text-muted-foreground mb-2">Win Rate</p>
-                      <div className="text-3xl font-bold">28.4%</div>
+                      <p className="text-sm font-medium text-muted-foreground mb-2">PASS RATE</p>
+                      <div className="text-3xl font-bold">88.4%</div>
                       <div className="flex items-center text-red-500 text-sm mt-1 font-medium">
                         <TrendingUp className="w-4 h-4 mr-1 rotate-180" /> -1.1%
                       </div>
@@ -214,7 +214,7 @@ export default function LandingPage() {
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <Card className="p-6 lg:col-span-2 shadow-sm">
                       <div className="flex justify-between items-center mb-6">
-                        <h4 className="font-semibold">Revenue Trend</h4>
+                        <h4 className="font-semibold">SCORE Trend</h4>
                         <Badge variant="secondary" className="bg-slate-900 text-white hover:bg-slate-800">$12.4k</Badge>
                       </div>
                       <div className="h-[200px] flex items-end justify-between gap-2 px-2">
