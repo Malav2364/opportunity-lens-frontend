@@ -164,7 +164,47 @@ export function QuizPage({ quiz }) {
                         violations={violations}
                     />
 
-                    <div className="text-center mt-8">
+                    <div className="mt-8 space-y-4 text-left">
+                        <h2 className="text-2xl font-bold text-center mb-6">Detailed Analysis</h2>
+                        {quiz.questions.map((question, index) => {
+                            const userAnswer = selectedAnswers[index];
+                            const isCorrect = userAnswer === question.correct_answer;
+                            const isSkipped = userAnswer === undefined;
+                            
+                            return (
+                                <Card key={index} className={`border-l-4 shadow-sm ${isCorrect ? 'border-l-green-500' : isSkipped ? 'border-l-yellow-500' : 'border-l-destructive'}`}>
+                                    <CardHeader className="pb-2">
+                                        <div className="flex justify-between items-start gap-4">
+                                            <CardTitle className="text-base sm:text-lg font-medium text-muted-foreground">Question {index + 1}</CardTitle>
+                                            <Badge className={isCorrect ? "bg-green-500 hover:bg-green-600" : isSkipped ? "bg-yellow-500 hover:bg-yellow-600" : "bg-destructive hover:bg-destructive/90"}>
+                                                {isCorrect ? "Correct" : isSkipped ? "Skipped" : "Incorrect"}
+                                            </Badge>
+                                        </div>
+                                        <p className="mt-2 text-base sm:text-lg font-semibold leading-relaxed">{question.question}</p>
+                                    </CardHeader>
+                                    <CardContent className="pt-2 space-y-3">
+                                        <div className="flex flex-col sm:flex-row gap-1 sm:gap-4 p-3 rounded-md bg-muted/40">
+                                            <span className="font-semibold text-sm uppercase tracking-wide text-muted-foreground min-w-[100px]">Your Answer:</span>
+                                            <span className={`${isCorrect ? "text-green-600 dark:text-green-400" : "text-destructive"} font-medium`}>
+                                                {userAnswer || "Not answered"}
+                                            </span>
+                                        </div>
+                                        
+                                        {!isCorrect && (
+                                            <div className="flex flex-col sm:flex-row gap-1 sm:gap-4 p-3 rounded-md bg-green-100/20 dark:bg-green-900/10 border border-green-200/50 dark:border-green-800/30">
+                                                <span className="font-semibold text-sm uppercase tracking-wide text-green-700 dark:text-green-400 min-w-[100px]">Correct Answer:</span>
+                                                <span className="text-green-700 dark:text-green-400 font-medium">
+                                                    {question.correct_answer}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </CardContent>
+                                </Card>
+                            );
+                        })}
+                    </div>
+
+                    <div className="text-center mt-8 pb-8">
                         <Button asChild size="lg">
                             <Link href="/dashboard">Back to Dashboard</Link>
                         </Button>
@@ -301,21 +341,21 @@ export function QuizPage({ quiz }) {
             </main>
 
             <footer className="fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-sm border-t z-40">
-                <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+                <div className="container mx-auto px-2 md:px-4 py-3 md:py-4 flex items-center justify-between gap-2 md:gap-4">
                     <Button 
                         variant="outline"
                         onClick={() => setCurrentQuestionIndex(prev => Math.max(0, prev - 1))}
                         disabled={currentQuestionIndex === 0}
-                        className="px-6 py-5 text-base"
+                        className="px-3 py-2 h-auto text-sm md:px-6 md:py-5 md:text-base whitespace-nowrap"
                     >
                         Previous
                     </Button>
-                    <div className="flex items-center gap-3 flex-wrap justify-center">
+                    <div className="flex-1 flex items-center gap-2 overflow-x-auto md:overflow-visible md:flex-wrap justify-start md:justify-center px-1 py-1 no-scrollbar mask-gradient">
                         {quiz.questions.map((_, index) => (
                             <button
                                 key={index}
                                 onClick={() => setCurrentQuestionIndex(index)}
-                                className={`h-10 w-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-200 border-2
+                                className={`h-8 w-8 md:h-10 md:w-10 rounded-full flex-shrink-0 flex items-center justify-center font-bold text-xs md:text-sm transition-all duration-200 border-2
                                     ${currentQuestionIndex === index 
                                         ? 'bg-primary text-primary-foreground border-primary scale-110 shadow-lg' 
                                         : selectedAnswers[index] !== undefined 
@@ -330,7 +370,7 @@ export function QuizPage({ quiz }) {
                     </div>
                     <Button 
                         onClick={handleNextQuestion}
-                        className="px-6 py-5 text-base"
+                        className="px-3 py-2 h-auto text-sm md:px-6 md:py-5 md:text-base whitespace-nowrap"
                     >
                         {currentQuestionIndex < quiz.questions.length - 1 ? 'Next' : 'Finish'}
                     </Button>

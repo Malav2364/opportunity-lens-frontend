@@ -7,9 +7,9 @@ import { LayoutDashboard, GraduationCap, ClipboardList, User } from "lucide-reac
 export function MobileNav() {
   const pathname = usePathname();
 
-  // Don't show on landing page or auth pages
+  // Don't show on landing page, auth pages, or active quiz sessions
   const excludedPaths = ["/", "/login", "/signup", "/register"];
-  if (excludedPaths.includes(pathname)) return null;
+  if (excludedPaths.includes(pathname) || pathname.startsWith('/quiz')) return null;
 
   const navItems = [
     { 
