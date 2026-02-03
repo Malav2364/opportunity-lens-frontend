@@ -300,6 +300,31 @@ export function Dashboard({ user, session, availableQuizzes, recentQuizzes, achi
 
                         <YourGoals initialGoals={user.goals || []} />
 
+                        {/* Project Architect Widget */}
+                        <Card className="border-none shadow-sm bg-gradient-to-br from-indigo-600 to-violet-600 text-white overflow-hidden relative">
+                            <CardContent className="p-6">
+                                <div className="relative z-10">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="p-1.5 bg-white/20 rounded-lg backdrop-blur-sm">
+                                            <Hammer className="w-4 h-4 text-white" />
+                                        </div>
+                                        <h3 className="text-base font-bold">Project Architect</h3>
+                                    </div>
+                                    <p className="text-indigo-100 text-xs mb-4 leading-relaxed">
+                                        Turn ideas into reality. Generate comprehensive project blueprints with AI assistance.
+                                    </p>
+                                    <Button size="sm" variant="secondary" className="w-full bg-white text-indigo-600 hover:bg-indigo-50 border-none font-semibold h-8 text-xs" asChild>
+                                        <Link href="/architect">
+                                            Start Building <ArrowRight className="w-3 h-3 ml-2" />
+                                        </Link>
+                                    </Button>
+                                </div>
+                                <div className="absolute -bottom-6 -right-6 opacity-10 rotate-12">
+                                    <Hammer className="w-32 h-32" />
+                                </div>
+                            </CardContent>
+                        </Card>
+
                         <div className="space-y-2">
                             <div className="flex items-center justify-between px-1">
                                 <div className="flex items-center gap-2">
