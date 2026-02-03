@@ -6,6 +6,9 @@ import { User } from "@/model/user-model";
 import { auth } from "@/auth";
 import { dbConnect } from "@/lib/mongo";
 
+// Allow longer timeout for AI generation tasks (60 seconds)
+export const maxDuration = 60;
+
 export async function toggleModuleCompletion(moduleTitle, completed) {
     "use server";
     const session = await auth();
@@ -432,7 +435,10 @@ export async function generateProjectBlueprint(techStack, interest) {
 
     } catch (error) {
         console.error("Error generating blueprint:", error);
-        return { error: "Failed to generate blueprint. Please try again." };
+        if (error.message.includes("504")) {
+             return { error: "The AI request timed out. Please try again with simpler constraints or try again later." };
+        }
+        return { error: `Failed to generate blueprint: ${error.message}` };
     }
 }
 
