@@ -103,7 +103,7 @@ export async function generatePersonalizedCourse(topics) {
 
     } catch (error) {
         console.error("Error generating or saving personalized course:", error);
-        return { error: "Failed to generate the learning path. Please try again." };
+        return { error: `Failed to generate the learning path: ${error.message}` };
     }
 }
 
@@ -220,9 +220,10 @@ export async function getLearningSuggestions(skills) {
         }
         // Check for fetch-related errors which often indicate network issues.
         if (error.message.includes('fetch failed')) {
-            return { error: "Could not connect to the AI service. Please check your network connection and firewall settings." };
+            return { error: "Could not connect to the AI service. Connection failed." };
         }
-        return { error: "An unexpected error occurred while fetching suggestions. Please try again later." };
+        // Return the actual error message for clearer debugging in production
+        return { error: `An unexpected error occurred: ${error.message}` };
     }
 }
 
