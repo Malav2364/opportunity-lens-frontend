@@ -24,7 +24,7 @@ export async function toggleModuleCompletion(moduleTitle, completed) {
             // You might want to handle this case, e.g., by returning an error.
             console.warn(`No module found with title: ${moduleTitle} for user: ${session.user.email}`);
         }
-        
+
         // No need to revalidate if you're handling state on the client
         // revalidatePath("/learn"); 
 
@@ -87,7 +87,7 @@ export async function generatePersonalizedCourse(topics) {
         const text = response.text();
 
         let jsonString = text.replace(/```json|```/g, '').trim();
-        
+
         if (jsonString.indexOf('[') > -1 && jsonString.lastIndexOf(']') > -1) {
             jsonString = jsonString.substring(jsonString.indexOf('['), jsonString.lastIndexOf(']') + 1);
         }
@@ -107,14 +107,14 @@ export async function generatePersonalizedCourse(topics) {
     }
 }
 
-export  async function doSocialLogin(formData) {
-        const action = formData.get('action')
-        await signIn (action, {redirectTo  : "/dashboard"})
-        // console.log(action)
+export async function doSocialLogin(formData) {
+    const action = formData.get('action')
+    await signIn(action, { redirectTo: "/dashboard" })
+    // console.log(action)
 }
 
-export async function doLogout(){
-    await signOut ({redirectTo : "/"})
+export async function doLogout() {
+    await signOut({ redirectTo: "/" })
 }
 
 export async function doCredLogin(formData) {
@@ -129,7 +129,7 @@ export async function doCredLogin(formData) {
         if (response && response.error) {
             return { error: "Invalid credentials or user not found." };
         }
-        
+
         return response; // Success case
 
     } catch (error) {
@@ -196,9 +196,9 @@ export async function getLearningSuggestions(skills) {
         const result = await model.generateContent(prompt);
         const response = await result.response;
         const text = await response.text();
-        
+
         let jsonString = text.replace(/```json|```/g, '').trim();
-        
+
         // A more robust way to find the JSON part
         if (jsonString.indexOf('[') > -1 && jsonString.lastIndexOf(']') > -1) {
             jsonString = jsonString.substring(jsonString.indexOf('['), jsonString.lastIndexOf(']') + 1);
@@ -229,7 +229,7 @@ export async function getLearningSuggestions(skills) {
 export async function getLeaderboardData() {
     try {
         await dbConnect();
-        
+
         const leaderboard = await User.aggregate([
             {
                 $project: {
@@ -273,7 +273,7 @@ export async function getGitHubOpportunities(skill) {
         }
 
         const data = await response.json();
-        
+
         if (!data.items) return [];
 
         return data.items.map(issue => ({
@@ -301,11 +301,11 @@ export async function addGoal(title) {
 
         user.goals.push({ title, completed: false });
         await user.save();
-        
+
         // Return plain object representation of the new goal
         const newGoal = user.goals[user.goals.length - 1];
-        return { 
-            success: true, 
+        return {
+            success: true,
             goal: {
                 _id: newGoal._id.toString(),
                 title: newGoal.title,
@@ -355,5 +355,116 @@ export async function deleteGoal(goalId) {
     } catch (error) {
         console.error("Error deleting goal:", error);
         return { error: "Failed to delete goal" };
+    }
+}
+
+export async function generateProjectBlueprint(techStack, interest) {
+    if (!process.env.GEMINI_API_KEY) {
+        return { error: "AI service is not configured." };
+    }
+
+    try {
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+
+        const prompt = `
+            You are a Senior Software Architect. Create a unique, portfolio-worthy project blueprint.
+            
+            **Inputs:**
+            - **Tech Stack / Mastered Skills:** ${techStack}
+            - **User Interest/Theme:** ${interest}
+
+            **Goal:** Design a unique, portfolio-worthy project that specifically demonstrates mastery of the provided skills/tech stack within the context of the user's interest. Avoid generic ideas.
+
+            **Output Format:**
+            Return ONLY a valid JSON object with this exact structure:
+            {
+                "title": "Project Name",
+                "tagline": "A catchy one-sentence pitch.",
+                "description": "Short summary of what it does.",
+                "difficulty": "Intermediate",
+                "features": ["Key Feature 1", "Key Feature 2", "Key Feature 3"],
+                "fileStructure": [
+                    {
+                        "name": "src",
+                        "type": "folder",
+                        "children": [
+                            { "name": "components", "type": "folder", "children": [{ "name": "Button.jsx", "type": "file" }] },
+                            { "name": "App.js", "type": "file" }
+                        ]
+                    }
+                ],
+                "databaseSchema": [
+                    {
+                        "table": "Users",
+                        "fields": [
+                            { "name": "id", "type": "UUID" },
+                            { "name": "email", "type": "String" }
+                        ]
+                    }
+                ],
+                "buildSteps": [
+                    {
+                        "phase": "1. Setup & Core",
+                        "steps": ["Initialize repo", "Setup Auth"]
+                    }
+                ]
+            }
+            
+            **Rules:**
+            1. The file structure should reflect best practices for the requested stack (e.g., Next.js App Router folders vs React CRA).
+            2. The database schema should be relevant (SQL vs NoSQL keys).
+            3. Do not assume any pre-existing code.
+            4. Make it impressive but achievable for a solo dev.
+        `;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+
+        let jsonString = text.replace(/```json|```/g, '').trim();
+        if (jsonString.indexOf('{') > -1 && jsonString.lastIndexOf('}') > -1) {
+            jsonString = jsonString.substring(jsonString.indexOf('{'), jsonString.lastIndexOf('}') + 1);
+        }
+
+        return JSON.parse(jsonString);
+
+    } catch (error) {
+        console.error("Error generating blueprint:", error);
+        return { error: "Failed to generate blueprint. Please try again." };
+    }
+}
+
+export async function saveActiveProject(blueprint) {
+    const session = await auth();
+    if (!session?.user?.email) {
+        return { error: "User not authenticated." };
+    }
+
+    try {
+        await dbConnect();
+
+        // 1. Save the project
+        // 2. Add a goal for it
+        const goalTitle = `Build Project: ${blueprint.title}`;
+
+        await User.updateOne(
+            { email: session.user.email },
+            {
+                $set: { activeProject: blueprint },
+                $push: {
+                    goals: {
+                        title: goalTitle,
+                        completed: false,
+                        createdAt: new Date()
+                    }
+                }
+            }
+        );
+
+        return { success: true };
+    } catch (error) {
+        console.error("Error saving project:", error);
+        return { error: "Failed to save project." };
     }
 }

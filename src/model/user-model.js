@@ -24,17 +24,17 @@ const achievementSchema = new Schema({
 });
 
 const userSchema = new Schema({
-    Username  : {
-        required : true,
-        type : String
+    Username: {
+        required: true,
+        type: String
     },
-    email : {
-        required : true,
-        type : String,
-        unique : true
+    email: {
+        required: true,
+        type: String,
+        unique: true
     },
-    password : {
-        type : String,
+    password: {
+        type: String,
     },
     image: {
         type: String,
@@ -54,6 +54,10 @@ const userSchema = new Schema({
             createdAt: { type: Date, default: Date.now }
         }],
         default: []
+    },
+    activeProject: {
+        type: Object, // Stores the blueprint
+        default: null
     },
     learningPath: {
         type: Array,

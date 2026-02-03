@@ -4,20 +4,23 @@ import { useState } from "react";
 import { Header } from "./header"
 import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { BarChart, Trophy, Activity, Target, Zap, CheckCircle2, ArrowUpRight, ArrowRight } from "lucide-react"
+import { BarChart, Trophy, Activity, Target, Zap, CheckCircle2, ArrowUpRight, ArrowRight, Hammer } from "lucide-react"
 import { Leaderboard } from "./leaderboard";
 import { OpportunityScout } from "./opportunity-scout";
 import { AILearningBanner } from "./ai-learning-banner";
 import { TopicMastery, YourGoals } from "./dashboard-sidebar-widgets";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function Dashboard({ user, session, availableQuizzes, recentQuizzes, achievements, totalQuizzes, leaderboardData }) {
     const userImage = session?.user?.image && session.user.image.trim() !== "" ? session.user.image : "/Avatar21.svg";
     const userName = user?.Username || session?.user?.name;
     const [activeTab, setActiveTab] = useState("available");
+    const [viewAll, setViewAll] = useState(false);
 
-    const averageScore = recentQuizzes.length > 0 
+    const averageScore = recentQuizzes.length > 0
         ? (recentQuizzes.reduce((acc, quiz) => acc + quiz.score, 0) / recentQuizzes.length).toFixed(0)
         : 0;
 
@@ -97,80 +100,182 @@ export function Dashboard({ user, session, availableQuizzes, recentQuizzes, achi
                 <main className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Main Content Area (Left Column) */}
                     <div className="lg:col-span-2 space-y-8">
-                        
+
+                        {/* Active Project Card */}
+                        {user.activeProject && (
+                            <Card className="border-none shadow-md bg-gradient-to-r from-blue-600 to-indigo-600 text-white overflow-hidden relative">
+                                <div className="absolute top-0 right-0 p-8 opacity-10">
+                                    <Hammer className="w-32 h-32" />
+                                </div>
+                                <CardContent className="p-8 relative z-10">
+                                    <div className="flex justify-between items-start">
+                                        <div className="space-y-4">
+                                            <div className="flex items-center gap-2">
+                                                <Badge className="bg-white/20 hover:bg-white/30 text-white border-none">
+                                                    Current Focus
+                                                </Badge>
+                                                <Badge className="bg-white/20 hover:bg-white/30 text-white border-none">
+                                                    {user.activeProject.difficulty}
+                                                </Badge>
+                                            </div>
+                                            <div>
+                                                <h3 className="text-2xl font-bold mb-1">{user.activeProject.title}</h3>
+                                                <p className="text-blue-100 max-w-lg">{user.activeProject.tagline}</p>
+                                            </div>
+                                            <Button variant="secondary" className="bg-white text-blue-600 hover:bg-blue-50" asChild>
+                                                <Link href="/architect">
+                                                    View Blueprint <ArrowRight className="w-4 h-4 ml-2" />
+                                                </Link>
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
+
                         <AILearningBanner recentQuizzes={recentQuizzes} />
 
                         {/* Challenges Section */}
                         <div>
-                            <div className="flex items-center justify-between mb-4">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
                                 <div className="flex items-center gap-2">
                                     <div className="w-1 h-6 bg-blue-600 rounded-full"></div>
                                     <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">Choose Your Next Challenge</h2>
                                 </div>
-                                <div className="flex bg-white dark:bg-card p-1 rounded-lg border border-slate-200 dark:border-border">
-                                    <button 
-                                        onClick={() => setActiveTab("available")}
-                                        className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${activeTab === "available" ? "bg-slate-100 dark:bg-muted text-slate-900 dark:text-slate-100 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
-                                    >
-                                        Available Quizzes
-                                    </button>
-                                    <button 
-                                        onClick={() => setActiveTab("completed")}
-                                        className={`px-4 py-1.5 text-sm font-medium rounded-md transition-all ${activeTab === "completed" ? "bg-slate-100 dark:bg-muted text-slate-900 dark:text-slate-100 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
-                                    >
-                                        Completed
-                                    </button>
+
+                                <div className="flex items-center gap-4">
+                                    <div className="flex bg-white dark:bg-card p-1 rounded-lg border border-slate-200 dark:border-border">
+                                        <button
+                                            onClick={() => setActiveTab("available")}
+                                            className={`px-3 py-1 text-xs sm:text-sm font-medium rounded-md transition-all ${activeTab === "available" ? "bg-slate-100 dark:bg-muted text-slate-900 dark:text-slate-100 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+                                        >
+                                            Available
+                                        </button>
+                                        <button
+                                            onClick={() => setActiveTab("completed")}
+                                            className={`px-3 py-1 text-xs sm:text-sm font-medium rounded-md transition-all ${activeTab === "completed" ? "bg-slate-100 dark:bg-muted text-slate-900 dark:text-slate-100 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+                                        >
+                                            Completed
+                                        </button>
+                                    </div>
+
+                                    {(activeTab === "available" ? availableQuizzes : recentQuizzes).length > 4 && (
+                                        <button
+                                            onClick={() => setViewAll(true)}
+                                            className="text-xs sm:text-sm font-medium text-blue-600 hover:text-blue-700 flex items-center whitespace-nowrap"
+                                        >
+                                            View All <ArrowRight className="w-3 h-3 ml-1" />
+                                        </button>
+                                    )}
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {(activeTab === "available" ? availableQuizzes : recentQuizzes).slice(0, 4).map((quiz, idx) => (
-                                    <Card key={idx} className="border-none shadow-sm hover:shadow-md transition-all group">
-                                        <CardContent className="p-6">
-                                            <div className="flex justify-between items-start mb-4">
-                                                <Badge variant="secondary" className={`
-                                                    ${quiz.difficulty === 'Hard' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' : 
-                                                      quiz.difficulty === 'Medium' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' : 
-                                                      'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'} 
+                                {(activeTab === "available" ? availableQuizzes : recentQuizzes)
+                                    .slice(0, 4)
+                                    .map((quiz, idx) => (
+                                        <Card key={idx} className="border-none shadow-sm hover:shadow-md transition-all group">
+                                            <CardContent className="p-6">
+                                                <div className="flex justify-between items-start mb-4">
+                                                    <Badge variant="secondary" className={`
+                                                    ${quiz.difficulty === 'Hard' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
+                                                            quiz.difficulty === 'Medium' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
+                                                                'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'} 
                                                     uppercase text-[10px] font-bold tracking-wider px-2 py-1 rounded-md
                                                 `}>
-                                                    {quiz.difficulty || "MEDIUM"}
-                                                </Badge>
-                                                <div className="flex items-center gap-1 text-xs font-medium text-slate-400">
-                                                    <Activity className="w-3 h-3" />
-                                                    <span>{quiz.questions?.length || 10} Qs</span>
+                                                        {quiz.difficulty || "MEDIUM"}
+                                                    </Badge>
+                                                    <div className="flex items-center gap-1 text-xs font-medium text-slate-400">
+                                                        <Activity className="w-3 h-3" />
+                                                        <span>{quiz.questions?.length || 10} Qs</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            
-                                            <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2 line-clamp-1">
-                                                {quiz.title || (quiz.skills && quiz.skills[0]) || "General Assessment"}
-                                            </h3>
-                                            <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 line-clamp-2 h-10">
-                                                Master the fundamentals of {quiz.skills ? quiz.skills.join(", ") : "this topic"}, including syntax, data structures, and algorithms.
-                                            </p>
 
-                                            <div className="flex flex-wrap gap-2 mb-6">
-                                                {(quiz.skills || []).slice(0, 2).map(skill => (
-                                                    <span key={skill} className="text-[10px] font-bold uppercase text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded border border-slate-200 dark:border-slate-700">
-                                                        {skill}
-                                                    </span>
-                                                ))}
-                                            </div>
+                                                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2 line-clamp-1">
+                                                    {quiz.title || (quiz.skills && quiz.skills[0]) || "General Assessment"}
+                                                </h3>
+                                                <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 line-clamp-2 h-10">
+                                                    Master the fundamentals of {quiz.skills ? quiz.skills.join(", ") : "this topic"}, including syntax, data structures, and algorithms.
+                                                </p>
 
-                                            <Button className="w-full bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 group-hover:translate-y-[-2px] transition-transform" asChild>
-                                                <Link href={activeTab === "available" ? `/quiz/${quiz._id}` : "#"}>
-                                                    {activeTab === "available" ? "Start Quiz" : "View Results"} <ArrowRight className="w-4 h-4 ml-2" />
-                                                </Link>
-                                            </Button>
-                                        </CardContent>
-                                    </Card>
-                                ))}
+                                                <div className="flex flex-wrap gap-2 mb-6">
+                                                    {(quiz.skills || []).slice(0, 2).map(skill => (
+                                                        <span key={skill} className="text-[10px] font-bold uppercase text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded border border-slate-200 dark:border-slate-700">
+                                                            {skill}
+                                                        </span>
+                                                    ))}
+                                                </div>
+
+                                                <Button className="w-full bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 group-hover:translate-y-[-2px] transition-transform" asChild>
+                                                    <Link href={`/quiz/${quiz._id}`}>
+                                                        {activeTab === "available" ? "Start Quiz" : "View Results"} <ArrowRight className="w-4 h-4 ml-2" />
+                                                    </Link>
+                                                </Button>
+                                            </CardContent>
+                                        </Card>
+                                    ))}
                                 {(activeTab === "available" ? availableQuizzes : recentQuizzes).length === 0 && (
                                     <div className="col-span-2 text-center py-12 text-slate-400 bg-white dark:bg-card rounded-xl border border-dashed border-slate-200 dark:border-border">
                                         <p>No quizzes found in this category.</p>
                                     </div>
                                 )}
                             </div>
+
+                            <Dialog open={viewAll} onOpenChange={setViewAll}>
+                                <DialogContent className="max-w-4xl h-[80vh] flex flex-col">
+                                    <DialogHeader>
+                                        <DialogTitle>All {activeTab === "available" ? "Available" : "Completed"} Quizzes</DialogTitle>
+                                        <DialogDescription>
+                                            Browsing all {activeTab === "available" ? availableQuizzes.length : recentQuizzes.length} quizzes.
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <ScrollArea className="flex-1 pr-4 -mr-4">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pr-4 pb-4">
+                                            {(activeTab === "available" ? availableQuizzes : recentQuizzes).map((quiz, idx) => (
+                                                <Card key={idx} className="border-none shadow-sm hover:shadow-md transition-all group">
+                                                    <CardContent className="p-6">
+                                                        <div className="flex justify-between items-start mb-4">
+                                                            <Badge variant="secondary" className={`
+                                                    ${quiz.difficulty === 'Hard' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' :
+                                                                    quiz.difficulty === 'Medium' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' :
+                                                                        'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'} 
+                                                    uppercase text-[10px] font-bold tracking-wider px-2 py-1 rounded-md
+                                                `}>
+                                                                {quiz.difficulty || "MEDIUM"}
+                                                            </Badge>
+                                                            <div className="flex items-center gap-1 text-xs font-medium text-slate-400">
+                                                                <Activity className="w-3 h-3" />
+                                                                <span>{quiz.questions?.length || 10} Qs</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2 line-clamp-1">
+                                                            {quiz.title || (quiz.skills && quiz.skills[0]) || "General Assessment"}
+                                                        </h3>
+                                                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 line-clamp-2 h-10">
+                                                            Master the fundamentals of {quiz.skills ? quiz.skills.join(", ") : "this topic"}, including syntax, data structures, and algorithms.
+                                                        </p>
+
+                                                        <div className="flex flex-wrap gap-2 mb-6">
+                                                            {(quiz.skills || []).slice(0, 2).map(skill => (
+                                                                <span key={skill} className="text-[10px] font-bold uppercase text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded border border-slate-200 dark:border-slate-700">
+                                                                    {skill}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+
+                                                        <Button className="w-full bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 group-hover:translate-y-[-2px] transition-transform" asChild>
+                                                            <Link href={`/quiz/${quiz._id}`}>
+                                                                {activeTab === "available" ? "Start Quiz" : "View Results"} <ArrowRight className="w-4 h-4 ml-2" />
+                                                            </Link>
+                                                        </Button>
+                                                    </CardContent>
+                                                </Card>
+                                            ))}
+                                        </div>
+                                    </ScrollArea>
+                                </DialogContent>
+                            </Dialog>
                         </div>
 
                         {/* Opportunity Scout */}
@@ -192,7 +297,7 @@ export function Dashboard({ user, session, availableQuizzes, recentQuizzes, achi
                     {/* Sidebar (Right Column) */}
                     <div className="lg:col-span-1 space-y-6">
                         <TopicMastery recentQuizzes={recentQuizzes} />
-                        
+
                         <YourGoals initialGoals={user.goals || []} />
 
                         <div className="space-y-2">
