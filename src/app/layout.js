@@ -3,6 +3,7 @@ import {ThemeProvider} from '../providers/theme-provider';
 import { Toaster } from "@/components/ui/sonner";
 import './globals.css';
 import { MobileNav } from "@/components/mobile-nav";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,18 +15,28 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://opportunitylens.app";
+const analyticsId =
+  process.env.NEXT_PUBLIC_GA_ID ||
+  process.env.NEXT_PUBLIC_GTAG_ID ||
+  process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
+const defaultTitle = "AI Learning Platform for Students | Opportunity Lens";
+const defaultDescription =
+  "Opportunity Lens is an AI learning platform for students and learners, with skill assessment, personalized learning paths, AI career guidance, and skill gap analysis.";
+
 export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://opportunitylens.com"),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "AI Learning Platform for Personalized Skill Paths | Opportunity Lens",
+    default: defaultTitle,
     template: "%s | Opportunity Lens",
   },
-  description:
-    "Opportunity Lens is an AI learning platform for skill assessment, personalized learning paths, AI career guidance, skill gap analysis, and project-based growth.",
+  description: defaultDescription,
   keywords: [
     "learning platform",
+    "student learning platform",
     "online learning platform",
     "personalized learning platform",
+    "ai learning",
     "ai learning website",
     "ai learning platform",
     "ai based learning platform",
@@ -62,9 +73,8 @@ export const metadata = {
   publisher: "Opportunity Lens",
   openGraph: {
     type: "website",
-    title: "AI Learning Platform for Personalized Skill Paths | Opportunity Lens",
-    description:
-      "Use Opportunity Lens to assess skills, generate personalized learning paths, find skill gaps, and get AI-guided recommendations for what to learn and build next.",
+    title: defaultTitle,
+    description: defaultDescription,
     url: "/",
     siteName: "Opportunity Lens",
     images: [
@@ -78,9 +88,8 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "AI Learning Platform for Personalized Skill Paths | Opportunity Lens",
-    description:
-      "An AI learning platform for personalized skill plans, customized learning paths, skill gap insights, and AI career guidance.",
+    title: defaultTitle,
+    description: defaultDescription,
     images: ["/opengraph-image.svg"],
   },
   icons: {
@@ -96,6 +105,22 @@ export default async function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
+        {analyticsId ? (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${analyticsId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${analyticsId}');
+              `}
+            </Script>
+          </>
+        ) : null}
         <ThemeProvider>
           {children}
           <MobileNav />

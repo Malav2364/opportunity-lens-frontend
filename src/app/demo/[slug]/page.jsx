@@ -181,7 +181,7 @@ export default async function DemoPage({ params }) {
             {demoNav.map(([itemSlug, label]) => (
               <Link
                 key={itemSlug}
-                href={`/demo/${itemSlug}`}
+                href={itemSlug === "login" ? "/login" : `/demo/${itemSlug}`}
                 className={cn(
                   "whitespace-nowrap rounded-full border px-4 py-2 transition-colors",
                   itemSlug === slug

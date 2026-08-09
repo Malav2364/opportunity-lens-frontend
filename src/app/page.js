@@ -1,5 +1,3 @@
-"use client"
-import { useRef } from "react";
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -8,7 +6,6 @@ import {
   Twitter, 
   PlayCircle, 
   CheckCircle2, 
-  Star, 
   ArrowRight, 
   BarChart3, 
   Users, 
@@ -16,8 +13,6 @@ import {
   TrendingUp,
   Calendar,
   Download,
-  ChevronLeft,
-  ChevronRight,
   BookOpen,
   BrainCircuit,
   Send,
@@ -26,17 +21,17 @@ import {
   Share2,
 } from "lucide-react"
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { TestimonialsCarousel } from "@/components/testimonials-carousel";
 import Image from "next/image"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Link from "next/link";
 import Script from "next/script";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://opportunitylens.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://opportunitylens.app";
 const shareText = "Opportunity Lens is a learning platform that uses AI to build personalized skill plans, learning paths, and career guidance.";
 const shareUrl = siteUrl;
 const demoRoutes = {
-  start: "/demo/start-free",
-  login: "/demo/login",
+  start: "/login",
+  login: "/login",
   quiz: "/demo/quiz",
   learningPaths: "/demo/learning-paths",
   architect: "/demo/architect",
@@ -242,65 +237,6 @@ const structuredData = {
 };
 
 export default function LandingPage() {
-  const scrollContainerRef = useRef(null);
-
-  const testimonials = [
-    {
-      name: "Alex Morgan",
-      role: "Data Scientist at TechFlow",
-      initials: "AM",
-      color: "bg-blue-100 text-blue-700",
-      quote: "The clarity I got from Opportunity Lens is unmatched. It didn't just show me data charts, it showed me a clear career path I couldn't see before."
-    },
-    {
-      name: "Priya Kapoor",
-      role: "CS Graduate Student",
-      initials: "PK",
-      color: "bg-purple-100 text-purple-700",
-      quote: "I was drowning in tutorials. This tool helped me focus on the 20% of skills that give 80% of the results. I finally feel like I'm making progress."
-    },
-    {
-      name: "James Ross",
-      role: "Engineering Lead",
-      initials: "JR",
-      color: "bg-green-100 text-green-700",
-      quote: "Our team uses it to align on skill gaps. It's become essential for our quarterly learning goals and keeping everyone on the same page."
-    },
-    {
-      name: "Sarah Chen",
-      role: "Product Manager",
-      initials: "SC",
-      color: "bg-orange-100 text-orange-700",
-      quote: "Finally, a tool that helps me understand the technical constraints my team faces. It's bridged the gap between product and engineering."
-    },
-    {
-      name: "Michael Torres",
-      role: "Junior Developer",
-      initials: "MT",
-      color: "bg-indigo-100 text-indigo-700",
-      quote: "The roadmap feature is a lifesaver. I know exactly what to learn next to level up my career. Highly recommended for new devs."
-    },
-    {
-      name: "Emily Watson",
-      role: "Data Analyst",
-      initials: "EW",
-      color: "bg-pink-100 text-pink-700",
-      quote: "The visualizations are top notch. I can easily spot trends and outliers in my data. It's made my job so much easier."
-    }
-  ];
-
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -400, behavior: 'smooth' });
-    }
-  };
-
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 400, behavior: 'smooth' });
-    }
-  };
-
   return (
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-blue-100 selection:text-blue-900">
       <Script
@@ -600,7 +536,7 @@ export default function LandingPage() {
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
                   {internalResources.map((item) => (
-                    <Link key={item.href} href={item.href} className="inline-flex items-center justify-between rounded-lg border px-4 py-3 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
+                    <Link key={`${item.href}-${item.label}`} href={item.href} className="inline-flex items-center justify-between rounded-lg border px-4 py-3 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
                       <span>{item.label}</span>
                       <ArrowRight className="w-4 h-4 text-muted-foreground" />
                     </Link>
@@ -758,43 +694,7 @@ export default function LandingPage() {
               </p>
             </div>
             
-            <div 
-              ref={scrollContainerRef}
-              className="flex overflow-x-auto gap-8 pb-8 snap-x snap-mandatory scrollbar-hide"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            >
-              {testimonials.map((item, i) => (
-                <div key={i} className="min-w-[300px] md:min-w-[calc(33.333%-1.5rem)] snap-center">
-                  <Card className="p-8 border-none shadow-sm hover:shadow-md transition-shadow h-full">
-                    <div className="flex gap-1 mb-6">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star key={star} className="w-4 h-4 fill-blue-500 text-blue-500" />
-                      ))}
-                    </div>
-                    <p className="text-muted-foreground mb-8 leading-relaxed">&quot;{item.quote}&quot;</p>
-                    <div className="flex items-center gap-4 mt-auto">
-                      <Avatar className="h-10 w-10">
-                        <AvatarFallback className={item.color}>{item.initials}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <h4 className="font-semibold text-sm">{item.name}</h4>
-                        <p className="text-xs text-muted-foreground">{item.role}</p>
-                      </div>
-                    </div>
-                  </Card>
-                </div>
-              ))}
-            </div>
-            
-            {/* Navigation Buttons */}
-            <div className="flex items-center justify-center gap-4 mt-4">
-              <Button variant="outline" size="icon" onClick={scrollLeft} className="rounded-full">
-                <ChevronLeft className="w-4 h-4" />
-              </Button>
-              <Button variant="outline" size="icon" onClick={scrollRight} className="rounded-full">
-                <ChevronRight className="w-4 h-4" />
-              </Button>
-            </div>
+            <TestimonialsCarousel />
           </div>
         </section>
 
@@ -903,4 +803,3 @@ export default function LandingPage() {
     </div>
   )
 }
-

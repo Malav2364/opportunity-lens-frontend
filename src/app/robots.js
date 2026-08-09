@@ -1,4 +1,4 @@
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://opportunitylens.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://opportunitylens.app";
 const siteHost = new URL(siteUrl).host;
 
 export default function robots() {
