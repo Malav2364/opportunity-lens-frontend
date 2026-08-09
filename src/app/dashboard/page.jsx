@@ -5,6 +5,14 @@ import { dbConnect } from "@/lib/mongo";
 import { User } from "@/model/user-model";
 import { getLeaderboardData } from "@/app/actions";
 
+export const metadata = {
+  title: "Dashboard",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
+
 export default async function DashboardPage() {
   const session = await auth()
 

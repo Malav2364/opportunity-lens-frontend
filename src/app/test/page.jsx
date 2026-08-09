@@ -4,6 +4,14 @@ import { TestPage } from '@/components/testpage'
 import { dbConnect } from "@/lib/mongo";
 import { User } from "@/model/user-model";
 
+export const metadata = {
+    title: "Test",
+    robots: {
+        index: false,
+        follow: false,
+    },
+};
+
 export default async function Page() {
     const session = await auth()
 

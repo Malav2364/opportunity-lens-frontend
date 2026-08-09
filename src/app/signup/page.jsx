@@ -1,5 +1,14 @@
 import { SgForm } from "@/components/signup-form"
 
+export const metadata = {
+  title: "Sign Up",
+  description: "Create an Opportunity Lens account to start a personalized AI learning path.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
+
 export default function SignUpForm() {
   return (
     (<div

@@ -2,6 +2,14 @@ import { QuizPage } from "@/components/quizpage";
 import { getQuizById } from "@/queries/quizzes";
 import { notFound } from "next/navigation";
 
+export const metadata = {
+    title: "Quiz",
+    robots: {
+        index: false,
+        follow: false,
+    },
+};
+
 export default async function Page({ params }) {
     const { quizId } = params;
     const quiz = await getQuizById(quizId);

@@ -1,0 +1,17 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" rx="48" fill="#0F172A"/>
+  <circle cx="980" cy="110" r="170" fill="#2563EB" fill-opacity="0.24"/>
+  <circle cx="180" cy="520" r="220" fill="#38BDF8" fill-opacity="0.16"/>
+  <rect x="76" y="76" width="1048" height="478" rx="36" fill="#111827" stroke="#1F2937"/>
+  <rect x="112" y="112" width="128" height="128" rx="28" fill="#2563EB"/>
+  <path d="M154 149H198V193H154V149Z" fill="white" fill-opacity="0.94"/>
+  <path d="M216 149H238V171H216V149Z" fill="#93C5FD"/>
+  <path d="M112 249H1060" stroke="#1F2937" stroke-width="2"/>
+  <text x="284" y="170" fill="#E5E7EB" font-size="54" font-family="Arial, Helvetica, sans-serif" font-weight="700">Opportunity Lens</text>
+  <text x="284" y="226" fill="#93C5FD" font-size="30" font-family="Arial, Helvetica, sans-serif" font-weight="700">Learning platform for personalized skill paths</text>
+  <text x="112" y="328" fill="#F8FAFC" font-size="40" font-family="Arial, Helvetica, sans-serif" font-weight="700">AI guidance for what to learn next</text>
+  <text x="112" y="382" fill="#CBD5E1" font-size="24" font-family="Arial, Helvetica, sans-serif">Skill gap analysis, customized learning paths, and career-ready recommendations.</text>
+  <text x="112" y="432" fill="#CBD5E1" font-size="24" font-family="Arial, Helvetica, sans-serif">Built for students, career switchers, and teams that want measurable progress.</text>
+  <rect x="112" y="474" width="258" height="64" rx="32" fill="#2563EB"/>
+  <text x="156" y="516" fill="white" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700">OpportunityLens.com</text>
+</svg>
