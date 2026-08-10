@@ -2,7 +2,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     },
     "target": "ES2017",
     "lib": [
@@ -11,7 +13,7 @@
       "esnext"
     ],
     "allowJs": true,
-    "ignoreDeprecations": "6.0",
+    "ignoreDeprecations": "5.0",
     "skipLibCheck": true,
     "strict": false,
     "noEmit": true,
@@ -32,8 +34,9 @@
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"
-, "src/app/api/auth/[...nextauth]/route.js"  ],
+    "**/*.tsx",
+    "src/app/api/auth/[...nextauth]/route.js"
+  ],
   "exclude": [
     "node_modules"
   ]
