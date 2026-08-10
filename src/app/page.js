@@ -453,7 +453,7 @@ export default function LandingPage() {
                 Product preview
               </Badge>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                A landing page should show the product doing the work
+                See the platform in action
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed">
                 Opportunity Lens turns onboarding, assessment, and returning sessions into one connected learning loop. These previews use the same visual language as the app so visitors can understand the experience before signing in.
